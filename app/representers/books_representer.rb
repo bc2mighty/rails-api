@@ -3,7 +3,7 @@ class BooksRepresenter
     @books = books
   end
 
-  def as_json
+  def as_array_json
     books.map do |book|
       {
         id: book.id,
@@ -12,6 +12,15 @@ class BooksRepresenter
         author_age: book.author.age
       }
     end
+  end
+
+  def as_object_json
+    {
+      id: @books.id,
+      title: @books.title,
+      author_name: author_name(@books),
+      author_age: @books.author.age
+    }
   end
 
   private

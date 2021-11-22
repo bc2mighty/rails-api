@@ -5,13 +5,14 @@ module Api
     class BooksController < ApplicationController
       def index
         books = Book.all
-        render json: BooksRepresenter.new(books).as_json
+        render json: BooksRepresenter.new(books).as_array_json
       end
 
       def create
+        # binding.irb
         book = Book.new(book_params)
         if book.save
-          render json: book, status:  :created
+          render json: BooksRepresenter.new(book).as_object_json, status:  :created
         else
           render json: { status: false, error_messages: book.errors }, status:  :unprocessable_entity
         end
@@ -26,7 +27,7 @@ module Api
       private
 
       def book_params
-        params.require(:book).permit(:title, :author)
+        params.require(:book).permit(:title, :author_id)
       end
     end
   end
