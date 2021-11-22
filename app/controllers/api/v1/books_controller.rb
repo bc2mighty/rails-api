@@ -1,8 +1,11 @@
 module Api
   module V1
+    require './app/representers/books_representer'
+
     class BooksController < ApplicationController
       def index
-        render json: Book.all
+        books = Book.all
+        render json: BooksRepresenter.new(books).as_json
       end
 
       def create
