@@ -4,13 +4,27 @@ describe 'Books API', type: :request do
   describe "GETS /books" do
     it 'returns all books' do
       author = FactoryBot.create(:author, first_name: "Shade", last_name: "Blade", age: 45)
-      FactoryBot.create(:book, title: "Test Title 1", author_id: author.id)
-      FactoryBot.create(:book, title: "Test Title 2", author_id: author.id)
+      FactoryBot.create(:book, title: "Test Title 1", author: author)
+      FactoryBot.create(:book, title: "Test Title 2", author: author)
 
       get '/api/v1/books'
 
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body).size).to eq(2)
+      expect(response_body.size).to eq(2)
+      expect(JSON.parse(response.body)).to eq([
+        {
+          "id" => 1,
+          "title" => "Test Title 1",
+          "author_name" => "#{author.first_name} #{author.last_name}",
+          "author_age" => author.age,
+        },
+        {
+          "id" => 2,
+          "title" => "Test Title 2",
+          "author_name" => "#{author.first_name} #{author.last_name}",
+          "author_age" => author.age,
+        }
+      ])
     end
   end
   
@@ -20,7 +34,7 @@ describe 'Books API', type: :request do
 
       expect {
         post '/api/v1/books', params: {
-          book: { title: "Test Book 1", author_id: author.id}
+          book: { title: "Test Book 1", author: author}
         }
       }.to change { Book.count }.from(0).to(1)
 
