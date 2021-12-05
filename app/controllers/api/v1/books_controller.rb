@@ -1,3 +1,5 @@
+require 'net/http'
+
 module Api
   module V1
     require './app/representers/books_representer'
@@ -13,6 +15,18 @@ module Api
       def create
         # binding.irb
         book = Book.new(book_params)
+        begin
+          p "Before calling Job"
+          # GithubUsersJob.perform_later({:username => "mojombo"})
+          GithubWorker.perform_async
+          p "after calling Job"
+          return render json: "Hi"
+        rescue Exception => e
+          p e.message
+          return render json: { message: e.message }
+        end
+
+        raise 'exit'
         if book.save
           render json: BooksRepresenter.new(book).as_object_json, status:  :created
         else
