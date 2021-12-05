@@ -20,7 +20,7 @@ module Api
           # GithubUsersJob.perform_later({:username => "mojombo"})
           GithubWorker.perform_in(1.minutes)
           p "after calling Job"
-          return render json: "Hi"
+          return render json: {message: "Hi"}
         rescue Exception => e
           p e.message
           return render json: { message: e.message }
