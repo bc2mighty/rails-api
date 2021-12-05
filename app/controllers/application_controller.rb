@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  # protect_from_forgery with: :null_session
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   rescue_from ActiveRecord::RecordNotDestroyed, with: :not_destroyed
 

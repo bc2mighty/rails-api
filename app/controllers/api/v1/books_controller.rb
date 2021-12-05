@@ -18,7 +18,7 @@ module Api
         begin
           p "Before calling Job"
           # GithubUsersJob.perform_later({:username => "mojombo"})
-          GithubWorker.perform_async
+          GithubWorker.perform_in(1.minutes)
           p "after calling Job"
           return render json: "Hi"
         rescue Exception => e
